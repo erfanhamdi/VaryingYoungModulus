@@ -95,7 +95,7 @@ beamPart.generateMesh()
 # Creating and Running the Job
 import job
 
-mdb.Job(name='CantileverBeamJob2', model='Cantilever Beam', type=ANALYSIS,
+mdb.Job(name='CantileverBeamJob', model='Cantilever Beam', type=ANALYSIS,
 	explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, 
 	description='Job simulates a loaded cantilever beam', 
 	parallelizationMethodExplicit=DOMAIN, 
@@ -105,8 +105,12 @@ mdb.Job(name='CantileverBeamJob2', model='Cantilever Beam', type=ANALYSIS,
 	modelPrint=OFF, contactPrint=OFF, historyPrint=OFF)
 
 # Run the job
-mdb.jobs['CantileverBeamJob2'].submit(consistencyChecking=OFF)
+mdb.jobs['CantileverBeamJob'].submit(consistencyChecking=OFF)
 # Do not return control till job is finished running
 mdb.jobs['CantileverBeamJob'].waitForCompletion()
 # End of run job 
 
+# Post Processing
+import visualization
+beam_Odb_Path = 'CantileverBeamJob.odb'
+an_Odb_object = session.openOdb(name = beam_Odb_Path)
