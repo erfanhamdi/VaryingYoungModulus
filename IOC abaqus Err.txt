@@ -1,0 +1,9 @@
+There was a great problem at first regarding abaqus crashing after trying to
+section using the section by datum Plane 
+the problem was that I used to define an assembly first and then use that for
+making the sections and It all caused the "GUI detected error while waiting for
+ipc connection to close." Error 
+it has nothing to do with the graphics and its just a problem of programming 
+if it runs interactively then it should run by scripts
+this is an error of abaqus regarding the Scripts.
+
