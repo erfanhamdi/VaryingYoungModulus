@@ -30,10 +30,29 @@ beamMaterial.Elastic(table = ((200e9, 0.29),))
 
 # Creating Sections
 import section
-
-beamSection = beamModel.HomogeneousSolidSection(name = 'Beam Section', material = 'AISI 1005 Steel')
-beam_region = (beamPart.cells, )
-beamPart.SectionAssignment(region = beam_region, sectionName = 'Beam Section')
+for i in range (11):
+	beamMaterial = beamModel.Material(name = 'mater'+str(i))
+	beamMaterial.Density(table = ((7872, ),))
+	n = 0
+	E_c = 380e9
+	E_m = 70e9
+	x = i*0.5
+	a = 5
+	E_var = E_m+(E_c-E_m)*(x/a)**n 
+	beamModel.DatumPlaneByPrincipalPlane(principalPlane=XYPLANE, offset=(i+1)*0.5)
+	p = beamModel
+	c = p.cells
+	face_pt_x = 0.3
+	face_pt_y = 0
+	face_pt_z = (i+1)*0.5 - 0.01
+	face_pt = (face_pt_x, face_pt_y, face_pt_z)
+	pickedCell = beamInstance.cells.findAt((face_pt,))
+	d1 = p.datums
+	p.PartitionCellByDatumPlane(datumPlane=d1[3], cells=pickedCells)
+	region = p.Set(cells=pickedCell, name='Set-3')
+	beamMaterial.Elastic(table = ((E_var, 0.29),))
+	beamSection = beamModel.HomogeneousSolidSection(name = 'Beam Section '+str(i), material = 'mater'+str(i))
+	beamPart.SectionAssignment(region = region, sectionName = 'Beam Section '+str(i))
 
 # Creating the Assembly
 import assembly
