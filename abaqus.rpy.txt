@@ -1,0 +1,119 @@
+# -*- coding: mbcs -*-
+#
+# Abaqus/CAE Release 6.14-4 replay file
+# Internal Version: 2015_06_12-01.11.13 135079
+# Run by Erfan on Sun Jul 12 17:19:57 2020
+#
+
+# from driverUtils import executeOnCaeGraphicsStartup
+# executeOnCaeGraphicsStartup()
+#: Executing "onCaeGraphicsStartup()" in the site directory ...
+#: Abaqus Error: 
+#: This error may have occurred due to a change to the Abaqus Scripting
+#: Interface. Please see the Abaqus Scripting Manual for the details of
+#: these changes. Also see the "Example environment files" section of 
+#: the Abaqus Site Guide for up-to-date examples of common tasks in the
+#: environment file.
+#: Execution of "onCaeGraphicsStartup()" in the site directory failed.
+from abaqus import *
+from abaqusConstants import *
+session.Viewport(name='Viewport: 1', origin=(0.0, 0.0), width=108.790626525879, 
+    height=121.12760925293)
+session.viewports['Viewport: 1'].makeCurrent()
+session.viewports['Viewport: 1'].maximize()
+from caeModules import *
+from driverUtils import executeOnCaeStartup
+executeOnCaeStartup()
+session.viewports['Viewport: 1'].partDisplay.geometryOptions.setValues(
+    referenceRepresentation=ON)
+import os
+os.chdir(r"D:\University stuff\Hamed\abaqusFiles\sectioning")
+s = mdb.models['Model-1'].ConstrainedSketch(name='__profile__', 
+    sheetSize=200.0)
+g, v, d, c = s.geometry, s.vertices, s.dimensions, s.constraints
+s.setPrimaryObject(option=STANDALONE)
+s.rectangle(point1=(-5.0, 5.0), point2=(5.0, -5.0))
+p = mdb.models['Model-1'].Part(name='Part-1', dimensionality=THREE_D, 
+    type=DEFORMABLE_BODY)
+p = mdb.models['Model-1'].parts['Part-1']
+p.BaseSolidExtrude(sketch=s, depth=200.0)
+s.unsetPrimaryObject()
+p = mdb.models['Model-1'].parts['Part-1']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+del mdb.models['Model-1'].sketches['__profile__']
+p = mdb.models['Model-1'].parts['Part-1']
+p.DatumPointByCoordinate(coords=(0.0, 0.0, 0.0))
+p = mdb.models['Model-1'].parts['Part-1']
+p.DatumPointByCoordinate(coords=(0.0, 0.0, 10.0))
+p = mdb.models['Model-1'].parts['Part-1']
+p.DatumPointByCoordinate(coords=(0.0, 0.0, 20.0))
+p = mdb.models['Model-1'].parts['Part-1']
+p.DatumPointByCoordinate(coords=(0.0, 0.0, 30.0))
+p = mdb.models['Model-1'].parts['Part-1']
+p.DatumPointByCoordinate(coords=(0.0, 0.0, 40.0))
+p = mdb.models['Model-1'].parts['Part-1']
+p.DatumAxisByPrincipalAxis(principalAxis=XAXIS)
+p = mdb.models['Model-1'].parts['Part-1']
+c = p.cells
+pickedCells = c.getSequenceFromMask(mask=('[#1 ]', ), )
+e, v1, d1 = p.edges, p.vertices, p.datums
+p.PartitionCellByPlanePointNormal(point=d1[6], normal=d1[7], cells=pickedCells)
+p = mdb.models['Model-1'].parts['Part-1']
+c = p.cells
+pickedCells = c.getSequenceFromMask(mask=('[#1 ]', ), )
+e1, v2, d2 = p.edges, p.vertices, p.datums
+p.PartitionCellByPlanePointNormal(point=d2[6], normal=e1[11], 
+    cells=pickedCells)
+p = mdb.models['Model-1'].parts['Part-1']
+c = p.cells
+pickedCells = c.getSequenceFromMask(mask=('[#2 ]', ), )
+e, v1, d1 = p.edges, p.vertices, p.datums
+p.PartitionCellByPlanePointNormal(point=d1[6], normal=e[23], cells=pickedCells)
+Mdb()
+#: A new model database has been created.
+#: The model "Model-1" has been created.
+session.viewports['Viewport: 1'].setValues(displayedObject=None)
+s1 = mdb.models['Model-1'].ConstrainedSketch(name='__profile__', 
+    sheetSize=200.0)
+g, v, d, c = s1.geometry, s1.vertices, s1.dimensions, s1.constraints
+s1.setPrimaryObject(option=STANDALONE)
+s1.rectangle(point1=(-5.0, 5.0), point2=(5.0, -5.0))
+p = mdb.models['Model-1'].Part(name='Part-1', dimensionality=THREE_D, 
+    type=DEFORMABLE_BODY)
+p = mdb.models['Model-1'].parts['Part-1']
+p.BaseSolidExtrude(sketch=s1, depth=150.0)
+s1.unsetPrimaryObject()
+p = mdb.models['Model-1'].parts['Part-1']
+session.viewports['Viewport: 1'].setValues(displayedObject=p)
+del mdb.models['Model-1'].sketches['__profile__']
+session.viewports['Viewport: 1'].partDisplay.setValues(sectionAssignments=ON, 
+    engineeringFeatures=ON)
+session.viewports['Viewport: 1'].partDisplay.geometryOptions.setValues(
+    referenceRepresentation=OFF)
+mdb.models['Model-1'].Material(name='Material-1')
+mdb.models['Model-1'].materials['Material-1'].Elastic(table=((2.0, 0.0), ))
+session.viewports['Viewport: 1'].partDisplay.setValues(sectionAssignments=OFF, 
+    engineeringFeatures=OFF)
+session.viewports['Viewport: 1'].partDisplay.geometryOptions.setValues(
+    referenceRepresentation=ON)
+p = mdb.models['Model-1'].parts['Part-1']
+p.DatumPlaneByPrincipalPlane(principalPlane=XYPLANE, offset=10.0)
+p = mdb.models['Model-1'].parts['Part-1']
+c = p.cells
+pickedCells = c.getSequenceFromMask(mask=('[#1 ]', ), )
+d2 = p.datums
+p.PartitionCellByDatumPlane(datumPlane=d2[2], cells=pickedCells)
+session.viewports['Viewport: 1'].partDisplay.setValues(sectionAssignments=ON, 
+    engineeringFeatures=ON)
+session.viewports['Viewport: 1'].partDisplay.geometryOptions.setValues(
+    referenceRepresentation=OFF)
+mdb.models['Model-1'].HomogeneousSolidSection(name='Section-1', 
+    material='Material-1', thickness=None)
+p = mdb.models['Model-1'].parts['Part-1']
+c = p.cells
+cells = c.getSequenceFromMask(mask=('[#2 ]', ), )
+region = p.Set(cells=cells, name='Set-1')
+p = mdb.models['Model-1'].parts['Part-1']
+p.SectionAssignment(region=region, sectionName='Section-1', offset=0.0, 
+    offsetType=MIDDLE_SURFACE, offsetField='', 
+    thicknessAssignment=FROM_SECTION)

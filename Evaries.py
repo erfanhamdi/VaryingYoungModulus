@@ -16,6 +16,8 @@ beamProfileSketch.rectangle(point1 = (0.1,0.1), point2 = (0.3, -0.1))
 beamPart = beamModel.Part(name = 'Beam', dimensionality = THREE_D, type=DEFORMABLE_BODY)
 beamPart.BaseSolidExtrude(sketch = beamProfileSketch, depth = 5)
 
+
+
 # Creating Material
 import material
 
@@ -26,7 +28,7 @@ E_c = 380e9
 E_m = 70e9
 #x = np.linspace(0,a,100)
 #E_var = E_m+(E_c-E_m)*(x/a)**n 
-beamMaterial.Elastic(table = ((200e9, 0.29),))
+#beamMaterial.Elastic(table = ((200e9, 0.29),))
 
 # Creating Sections
 import section
@@ -39,17 +41,17 @@ for i in range (11):
 	x = i*0.5
 	a = 5
 	E_var = E_m+(E_c-E_m)*(x/a)**n 
-	beamModel.DatumPlaneByPrincipalPlane(principalPlane=XYPLANE, offset=(i+1)*0.5)
-	p = beamModel
+	p = beamPart
+	datumId = p.DatumPlaneByPrincipalPlane(principalPlane=XYPLANE, offset=(i+1)*0.5)
 	c = p.cells
 	face_pt_x = 0.3
 	face_pt_y = 0
 	face_pt_z = (i+1)*0.5 - 0.01
 	face_pt = (face_pt_x, face_pt_y, face_pt_z)
-	pickedCell = beamInstance.cells.findAt((face_pt,))
+	pickedCell = beamPart.cells.findAt((face_pt,))
 	d1 = p.datums
-	p.PartitionCellByDatumPlane(datumPlane=d1[3], cells=pickedCells)
-	region = p.Set(cells=pickedCell, name='Set-3')
+	part = p.PartitionCellByDatumPlane(datumPlane=d1[2], cells=pickedCell)
+	region = part.Set(cells=pickedCell, name='Set-3')
 	beamMaterial.Elastic(table = ((E_var, 0.29),))
 	beamSection = beamModel.HomogeneousSolidSection(name = 'Beam Section '+str(i), material = 'mater'+str(i))
 	beamPart.SectionAssignment(region = region, sectionName = 'Beam Section '+str(i))
