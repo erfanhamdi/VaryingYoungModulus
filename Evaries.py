@@ -10,48 +10,47 @@ beamModel = mdb.models['Cantilever Beam']
 import sketch
 import partition
 
-beamProfileSketch = beamModel.ConstrainedSketch(name = 'Beam CS Profile', sheetSize = 5)
-beamProfileSketch.rectangle(point1 = (0.1,0.1), point2 = (0.3, -0.1))
-
+beamProfileSketch = beamModel.ConstrainedSketch(name = 'Beam CS Profile', sheetSize = 200)
+beamProfileSketch.rectangle(point1 = (-5,5), point2 = (5, -5))
+dpt = float(4)
 beamPart = beamModel.Part(name = 'Beam', dimensionality = THREE_D, type=DEFORMABLE_BODY)
-beamPart.BaseSolidExtrude(sketch = beamProfileSketch, depth = 5)
+beamPart.BaseSolidExtrude(sketch = beamProfileSketch, depth = dpt)
 
 
 
 # Creating Material
 import material
 
-beamMaterial = beamModel.Material(name = 'AISI 1005 Steel')
-beamMaterial.Density(table = ((7872, ),))
-N = 0
-E_c = 380e9
-E_m = 70e9
-#x = np.linspace(0,a,100)
-#E_var = E_m+(E_c-E_m)*(x/a)**n 
-#beamMaterial.Elastic(table = ((200e9, 0.29),))
-
 # Creating Sections
 import section
-for i in range (11):
+SectNo = 4
+for i in range (SectNo):
 	beamMaterial = beamModel.Material(name = 'mater'+str(i))
 	beamMaterial.Density(table = ((7872, ),))
-	n = 0
-	E_c = 380e9
-	E_m = 70e9
-	x = i*0.5
-	a = 5
-	E_var = E_m+(E_c-E_m)*(x/a)**n 
+	n = float(1)
+	E_c = float(380e9)
+	E_m = float(70e9)
+	x = float((i+1)*(dpt/SectNo))
+	a = float(dpt)
+	E_var = E_m+(E_c-E_m)*(x/dpt)**n 
 	p = beamPart
-	datumId = p.DatumPlaneByPrincipalPlane(principalPlane=XYPLANE, offset=(i+1)*0.5)
+	ofst = (dpt/SectNo)
+	datumId = p.DatumPlaneByPrincipalPlane(principalPlane=XYPLANE, offset = ofst*(i+1))
 	c = p.cells
-	face_pt_x = 0.3
+	face_pt_x = 0
 	face_pt_y = 0
-	face_pt_z = (i+1)*0.5 - 0.01
+	face_pt_z = (i+1)*(dpt/SectNo) - ofst/2
 	face_pt = (face_pt_x, face_pt_y, face_pt_z)
-	pickedCell = beamPart.cells.findAt((face_pt,))
+	datum_z_pt = (i)*(dpt/SectNo) + ofst/2
+	datum_coord = (face_pt_x, face_pt_y, datum_z_pt)
 	d1 = p.datums
-	part = p.PartitionCellByDatumPlane(datumPlane=d1[2], cells=pickedCell)
-	region = part.Set(cells=pickedCell, name='Set-3')
+	BaseCell = beamPart.cells.findAt((datum_coord,))
+	if i == SectNo-1 :
+	    region = p.Set(cells=BaseCell, name='Set-'+str(i))
+	else :
+	    part = p.PartitionCellByDatumPlane(datumPlane=d1[datumId.id], cells=BaseCell)
+	    pickedCell = beamPart.cells.findAt((face_pt,))
+	    region = p.Set(cells=pickedCell, name='Set-'+str(i))
 	beamMaterial.Elastic(table = ((E_var, 0.29),))
 	beamSection = beamModel.HomogeneousSolidSection(name = 'Beam Section '+str(i), material = 'mater'+str(i))
 	beamPart.SectionAssignment(region = region, sectionName = 'Beam Section '+str(i))
